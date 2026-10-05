@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 480" role="img" aria-label="Sample image placeholder: service bays">
+  <rect width="640" height="480" fill="#1e2328"/>
+  <rect x="0" y="360" width="640" height="120" fill="#272d34"/>
+  <g fill="none" stroke="#363e47" stroke-width="6">
+    <rect x="60" y="90" width="240" height="270"/>
+    <rect x="340" y="90" width="240" height="270"/>
+  </g>
+  <g fill="#363e47">
+    <rect x="60" y="90" width="240" height="40"/><rect x="340" y="90" width="240" height="40"/>
+  </g>
+  <g fill="#f5b800">
+    <rect x="90" y="250" width="14" height="110"/><rect x="256" y="250" width="14" height="110"/>
+    <rect x="370" y="250" width="14" height="110"/><rect x="536" y="250" width="14" height="110"/>
+  </g>
+  <path d="M110 250 q10-40 60-44 h40 q40 4 50 44z" fill="#9ea7b1" opacity=".5"/>
+  <text x="320" y="440" fill="#9ea7b1" font-family="Arial, sans-serif" font-size="20" text-anchor="middle">Sample image: replace with a photo of the shop</text>
+</svg>
