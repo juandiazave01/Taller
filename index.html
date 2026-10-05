@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>JM Automotive | Auto Repair in Oxford, NC</title>
+  <meta name="description" content="Auto repair in Oxford, NC. Book online, see an estimated price upfront. Oil changes, brakes, tires, alignment, diagnostics, A/C and hybrid battery service.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="demo-banner" id="demoBanner" hidden>
+    Demo version: prices, contact details, reviews and images are samples. Bookings are saved only in this browser.
+  </div>
+
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <a href="#top" class="brand" data-biz="name">JM Automotive</a>
+      <nav class="main-nav" aria-label="Main">
+        <a href="#services">Services</a>
+        <a href="#hybrid">Hybrid &amp; EV</a>
+        <a href="#estimate">Estimate</a>
+        <a href="#contact">Contact</a>
+        <a href="#schedule" class="btn btn-small">Book a service</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="top">
+
+    <!-- HERO -->
+    <section class="hero">
+      <div class="wrap hero-inner">
+        <div class="hero-copy">
+          <h1>Book your repair online. Know the price before you come in.</h1>
+          <p class="lead">Independent auto shop in Oxford, NC. Two lifts, our own alignment machine, and technicians who explain what your car needs in plain words.</p>
+          <div class="hero-actions">
+            <a href="#schedule" class="btn">Book a service</a>
+            <a href="#estimate" class="btn btn-ghost">Get an estimate</a>
+          </div>
+        </div>
+
+        <aside class="openings" aria-label="Next openings">
+          <h2 class="openings-title">Next openings</h2>
+          <dl class="openings-list">
+            <div>
+              <dt>Lift work</dt>
+              <dd id="nextLift">Checking…</dd>
+              <span class="openings-note">Oil, brakes, tires, alignment</span>
+            </div>
+            <div>
+              <dt>Quick checks</dt>
+              <dd id="nextGround">Checking…</dd>
+              <span class="openings-note">Diagnostics, A/C, battery, inspection</span>
+            </div>
+          </dl>
+          <p class="openings-hours" id="hoursShort"></p>
+        </aside>
+      </div>
+      <div class="hazard" aria-hidden="true"></div>
+    </section>
+
+    <!-- SERVICES -->
+    <section id="services" class="section">
+      <div class="wrap">
+        <div class="section-head">
+          <h2>Services and prices</h2>
+          <p>Estimated price ranges. The final price is confirmed after we inspect your vehicle, and you approve it before we start.</p>
+        </div>
+        <div class="board" id="serviceBoard"><!-- rendered by main.js --></div>
+      </div>
+    </section>
+
+    <!-- HYBRID & EV -->
+    <section id="hybrid" class="section section-alt">
+      <div class="wrap split">
+        <div>
+          <h2>Hybrid battery care</h2>
+          <p>A hybrid battery is cooled by a small fan that pulls air through a filter, usually under or beside the back seat. When that filter clogs with dust or pet hair, the battery runs hot and wears out faster. Replacing it is quick and costs a fraction of a new battery.</p>
+          <div class="board board-compact" id="hybridBoard"><!-- rendered by main.js --></div>
+          <p class="muted">More electric vehicle services are coming soon.</p>
+        </div>
+        <figure class="photo">
+          <img src="assets/img/sample-hybrid.svg" alt="Sample image: hybrid vehicle battery service" width="640" height="480">
+        </figure>
+      </div>
+    </section>
+
+    <!-- FREE CHECK -->
+    <section id="free-check" class="section">
+      <div class="wrap free-check">
+        <div>
+          <h2>Free vehicle check</h2>
+          <p>Not sure what your car needs? We'll look over the basics at no charge and tell you what can wait and what can't.</p>
+        </div>
+        <ul class="check-list" id="freeCheckList">
+          <li>Brakes</li><li>Tires</li><li>Fluids</li><li>Battery</li><li>Lights</li>
+        </ul>
+        <a href="#schedule" class="btn" data-preselect="freecheck">Book a free check</a>
+      </div>
+    </section>
+
+    <!-- ESTIMATE -->
+    <section id="estimate" class="section section-alt">
+      <div class="wrap">
+        <div class="section-head">
+          <h2>Online estimate</h2>
+          <p>Choose your vehicle and the services you need to see an estimated price range.</p>
+        </div>
+        <form class="panel estimate" id="estimateForm" novalidate>
+          <div class="field-row">
+            <label>Vehicle type
+              <select name="type" required></select>
+            </label>
+            <label>Year
+              <input name="year" type="number" inputmode="numeric" min="1980" placeholder="2018">
+            </label>
+            <label>Make
+              <input name="make" type="text" placeholder="Toyota">
+            </label>
+            <label>Model
+              <input name="model" type="text" placeholder="Camry">
+            </label>
+          </div>
+          <fieldset class="service-picks" id="estimateServices">
+            <legend>Services</legend>
+          </fieldset>
+          <div class="estimate-result" id="estimateResult" aria-live="polite">
+            <p class="muted">Select at least one service.</p>
+          </div>
+          <p class="fine">This is an estimate only. The final price is confirmed after inspection and you approve it before any work starts. A written estimate is available on request.</p>
+        </form>
+      </div>
+    </section>
+
+    <!-- SCHEDULE -->
+    <section id="schedule" class="section">
+      <div class="wrap">
+        <div class="section-head">
+          <h2>Schedule services</h2>
+          <p>Pick your services and an open time. You'll only see times when a technician and a spot are free.</p>
+        </div>
+
+        <form class="panel booking" id="bookingForm" novalidate>
+          <div class="step">
+            <h3><span class="step-num">1</span>What do you need?</h3>
+            <fieldset class="service-picks" id="bookingServices"><legend class="sr-only">Services</legend></fieldset>
+            <p class="plan-summary" id="planSummary"></p>
+          </div>
+
+          <div class="step">
+            <h3><span class="step-num">2</span>Pick a day and time</h3>
+            <div class="day-strip" id="dayStrip" role="radiogroup" aria-label="Day"></div>
+            <div class="slot-grid" id="slotGrid" role="radiogroup" aria-label="Time"></div>
+          </div>
+
+          <div class="step">
+            <h3><span class="step-num">3</span>Your details</h3>
+            <div class="field-row">
+              <label>Full name *
+                <input name="name" type="text" autocomplete="name" required>
+              </label>
+              <label>Phone *
+                <input name="phone" type="tel" autocomplete="tel" placeholder="(919) 555-0123" required>
+              </label>
+              <label>Email *
+                <input name="email" type="email" autocomplete="email" required>
+              </label>
+            </div>
+            <div class="field-row">
+              <label>Vehicle type *
+                <select name="type" required></select>
+              </label>
+              <label>Make *
+                <input name="make" type="text" required>
+              </label>
+              <label>Model *
+                <input name="model" type="text" required>
+              </label>
+              <label>Year *
+                <input name="year" type="number" inputmode="numeric" min="1980" required>
+              </label>
+              <label>Mileage (miles) *
+                <input name="mileage" type="number" inputmode="numeric" min="0" required>
+              </label>
+            </div>
+            <label class="full">Notes (optional)
+              <textarea name="notes" rows="3" placeholder="Noises, warning lights, anything we should know"></textarea>
+            </label>
+            <label class="consent">
+              <input type="checkbox" name="consent" required>
+              <span>I agree that <span data-biz="name">JM Automotive</span> may send me appointment confirmations and maintenance reminders by text message and email. Message and data rates may apply. Reply STOP to opt out at any time. See our <a href="privacy.html">privacy policy</a>.</span>
+            </label>
+          </div>
+
+          <div class="form-error" id="bookingError" role="alert" hidden></div>
+          <button type="submit" class="btn btn-wide">Book appointment</button>
+        </form>
+
+        <div class="panel confirmation" id="bookingConfirm" hidden tabindex="-1">
+          <h3>Appointment booked</h3>
+          <p id="confirmText"></p>
+          <button type="button" class="btn btn-ghost" id="bookAnother">Book another service</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- REVIEWS -->
+    <section id="reviews" class="section section-alt">
+      <div class="wrap">
+        <div class="section-head">
+          <h2>What customers say</h2>
+          <p class="sample-tag" id="reviewsSampleTag" hidden>Sample reviews for the demo. Replace with real reviews before launch.</p>
+        </div>
+        <div class="reviews" id="reviewList"></div>
+      </div>
+    </section>
+
+    <!-- ABOUT -->
+    <section id="about" class="section">
+      <div class="wrap split">
+        <figure class="photo">
+          <img src="assets/img/sample-shop.svg" alt="Sample image: the shop's service bays" width="640" height="480">
+        </figure>
+        <div>
+          <h2>About the shop</h2>
+          <p>We're a new, independent shop in Oxford built on a simple idea: treat every car with the care a good maintenance program gives a machine. We track your vehicle's service history, remind you before something is due, and never start work you haven't approved.</p>
+          <p>We serve drivers across Granville County, and we speak Spanish.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact" class="section section-alt">
+      <div class="wrap contact">
+        <div>
+          <h2>Visit or call</h2>
+          <address>
+            <span data-biz="addressLine1"></span><br>
+            <span data-biz="addressLine2"></span>
+          </address>
+          <p><a data-biz-tel href="#" data-biz="phoneDisplay"></a><br>
+             <a data-biz-mail href="#" data-biz="email"></a></p>
+          <h3>Hours</h3>
+          <p id="hoursFull"></p>
+          <a class="btn btn-whatsapp" data-wa href="#" target="_blank" rel="noopener">¿Hablas español? Escríbenos por WhatsApp</a>
+        </div>
+        <div class="map">
+          <iframe id="mapFrame" title="Map to the shop" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap footer-inner">
+      <p>&copy; <span id="year"></span> <span data-biz="name">JM Automotive</span>, Oxford, NC</p>
+      <p><a href="privacy.html">Privacy policy</a> · <a href="admin.html">Staff</a></p>
+    </div>
+  </footer>
+
+  <a class="wa-float" data-wa href="#" target="_blank" rel="noopener" aria-label="Escríbenos por WhatsApp en español">
+    <svg viewBox="0 0 32 32" width="26" height="26" aria-hidden="true"><path fill="currentColor" d="M16 3a13 13 0 0 0-11.2 19.6L3 29l6.6-1.7A13 13 0 1 0 16 3zm0 23.6c-2 0-4-.6-5.7-1.6l-.4-.2-3.9 1 1-3.8-.3-.4A10.6 10.6 0 1 1 16 26.6zm5.8-7.9c-.3-.2-1.9-.9-2.2-1s-.5-.2-.7.2-.8 1-1 1.2-.4.2-.7 0a8.7 8.7 0 0 1-4.3-3.8c-.3-.6.3-.5.9-1.7.1-.2 0-.4 0-.5l-1-2.4c-.3-.6-.5-.5-.7-.5h-.6a1.2 1.2 0 0 0-.9.4 3.7 3.7 0 0 0-1.1 2.7 6.4 6.4 0 0 0 1.3 3.4 14.7 14.7 0 0 0 5.6 5c2.1.9 2.9 1 4 .8a3.4 3.4 0 0 0 2.2-1.6 2.8 2.8 0 0 0 .2-1.6c-.1-.1-.3-.2-.6-.3z"/></svg>
+    <span>Español</span>
+  </a>
+
+  <script src="js/config.js"></script>
+  <script src="js/scheduler.js"></script>
+  <script src="js/dataService.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

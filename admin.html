@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Staff panel | JM Automotive</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="admin">
+
+  <div class="demo-banner">
+    Demo staff panel. The password is not secure and data lives only in this browser. Real login and database come in Phase 2.
+  </div>
+
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <a href="index.html" class="brand"><span data-biz="name">JM Automotive</span> staff</a>
+      <nav class="main-nav" aria-label="Staff">
+        <button type="button" class="btn btn-ghost btn-small" id="logout" hidden>Sign out</button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap admin-main">
+
+    <!-- Login -->
+    <form class="panel login" id="loginForm">
+      <h1>Staff sign-in</h1>
+      <label>Password
+        <input type="password" name="pw" autocomplete="current-password" required>
+      </label>
+      <p class="form-error" id="loginError" role="alert" hidden>Wrong password. Try again.</p>
+      <button class="btn btn-wide" type="submit">Sign in</button>
+      <p class="fine">Demo password: see <code>CONFIG.admin.demoPassword</code> in js/config.js.</p>
+    </form>
+
+    <div id="app" hidden>
+      <div class="tabs" role="tablist">
+        <button role="tab" class="tab is-on" data-tab="schedule" aria-selected="true">Schedule</button>
+        <button role="tab" class="tab" data-tab="walkin" aria-selected="false">Walk-in</button>
+        <button role="tab" class="tab" data-tab="customers" aria-selected="false">Customers</button>
+        <button role="tab" class="tab" data-tab="reminders" aria-selected="false">Reminders</button>
+      </div>
+
+      <!-- Schedule -->
+      <section class="tab-panel" id="tab-schedule">
+        <div class="admin-bar">
+          <label>Day <input type="date" id="schedDate"></label>
+          <div class="capacity" id="capacity"></div>
+        </div>
+        <div id="apptList"></div>
+      </section>
+
+      <!-- Walk-in -->
+      <section class="tab-panel" id="tab-walkin" hidden>
+        <form class="panel" id="walkinForm" novalidate>
+          <h2>Register a walk-in</h2>
+          <p class="muted">Saving a walk-in takes the spot off the public calendar right away.</p>
+          <fieldset class="service-picks" id="walkinServices"><legend>Services</legend></fieldset>
+          <p class="plan-summary" id="walkinPlan"></p>
+          <div class="field-row" style="margin-top:1rem">
+            <label>Day <input type="date" name="date"></label>
+          </div>
+          <div class="slot-grid" id="walkinSlots"></div>
+          <h3 style="margin-top:1.5rem">Customer and vehicle</h3>
+          <div class="field-row">
+            <label>Full name * <input name="name" required></label>
+            <label>Phone * <input name="phone" type="tel" required></label>
+            <label>Email * <input name="email" type="email" required></label>
+          </div>
+          <div class="field-row">
+            <label>Vehicle type * <select name="type" required></select></label>
+            <label>Make * <input name="make" required></label>
+            <label>Model * <input name="model" required></label>
+            <label>Year * <input name="year" type="number" required></label>
+            <label>Mileage * <input name="mileage" type="number" required></label>
+          </div>
+          <label class="full">Notes <textarea name="notes" rows="2"></textarea></label>
+          <label class="consent">
+            <input type="checkbox" name="consent">
+            <span>Customer agreed to receive confirmations and maintenance reminders by text and email.</span>
+          </label>
+          <div class="form-error" id="walkinError" role="alert" hidden></div>
+          <button class="btn btn-wide" type="submit" style="margin-top:1.5rem">Save walk-in</button>
+          <p class="admin-ok" id="walkinOk" role="status" hidden></p>
+        </form>
+      </section>
+
+      <!-- Customers -->
+      <section class="tab-panel" id="tab-customers" hidden>
+        <label class="search">Search <input type="search" id="custSearch" placeholder="Name, phone, make or model"></label>
+        <div id="custList"></div>
+      </section>
+
+      <!-- Reminders -->
+      <section class="tab-panel" id="tab-reminders" hidden>
+        <p class="muted" id="reminderRule"></p>
+        <div id="reminderList"></div>
+      </section>
+
+      <p class="fine admin-reset"><button type="button" class="btn btn-ghost btn-small" id="resetDemo">Reset demo data</button></p>
+    </div>
+  </main>
+
+  <script src="js/config.js"></script>
+  <script src="js/scheduler.js"></script>
+  <script src="js/dataService.js"></script>
+  <script src="js/reminders.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+</html>
