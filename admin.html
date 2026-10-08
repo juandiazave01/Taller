@@ -44,6 +44,7 @@
         <button role="tab" class="tab" data-tab="walkin" aria-selected="false">Walk-in</button>
         <button role="tab" class="tab" data-tab="customers" aria-selected="false">Customers</button>
         <button role="tab" class="tab" data-tab="reminders" aria-selected="false">Reminders</button>
+        <button role="tab" class="tab" data-tab="repairs" aria-selected="false">Repair status</button>
       </div>
 
       <!-- Schedule -->
@@ -102,10 +103,23 @@
         <div id="reminderList"></div>
       </section>
 
+      <!-- Repair status -->
+      <section class="tab-panel" id="tab-repairs" hidden>
+        <p class="muted">Start a ticket when work begins. Print the ticket and put it on the car. Scanning its code with a staff phone opens this tab on that car so you can change the stage. Customers scan the same code, or type it on the "Track my repair" page, to see the stage.</p>
+        <h3>Cars in the shop</h3>
+        <div id="ticketList"></div>
+        <h3 style="margin-top:2rem">Start a ticket</h3>
+        <div id="ticketStart"></div>
+      </section>
+
       <p class="fine admin-reset"><button type="button" class="btn btn-ghost btn-small" id="resetDemo">Reset demo data</button></p>
     </div>
   </main>
 
+  <!-- Printable ticket (shown only when printing) -->
+  <div id="printTicket" class="print-ticket" hidden></div>
+
+  <script src="js/vendor/qrcode-generator.js"></script>
   <script src="js/config.js"></script>
   <script src="js/scheduler.js"></script>
   <script src="js/dataService.js"></script>

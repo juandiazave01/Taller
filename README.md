@@ -8,6 +8,8 @@ Customers can:
 - Get an online estimate for their vehicle
 - Book a service from real-time availability (only open times are shown)
 - Contact the shop on WhatsApp in Spanish
+- See the repair status of their car with the code on their ticket (track.html)
+- Add the site to their phone's home screen like an app (web app manifest)
 
 Staff can (admin.html):
 - See the day's schedule and capacity, mark jobs completed or cancelled
@@ -15,6 +17,9 @@ Staff can (admin.html):
 - Browse customers, vehicles and service history
 - See which vehicles are due for maintenance reminders
 - Open quote tools (Open Labor Project) from the staff panel
+- Start a repair ticket, print it with a QR code, and change the repair stage
+  (Repair status tab). Scanning the ticket opens the customer status page,
+  which has a "Staff: update this car" link back to that ticket.
 
 ## Phase 1 status: demo only
 
@@ -44,6 +49,10 @@ js/dataService.js        Data layer (mock now, real backend in Phase 2)
 js/reminders.js          Maintenance reminder calculation
 js/main.js               Public page behavior
 js/admin.js              Staff panel behavior
+js/track.js              Customer repair status page behavior
+js/vendor/               qrcode-generator (MIT) for printed ticket QR codes
+track.html               Customer repair status page
+manifest.webmanifest     Lets customers install the site as a phone app
 assets/img/              Sample images (replace with real photos)
 .github/workflows/static.yml   Deploys to GitHub Pages on push to main
 ```

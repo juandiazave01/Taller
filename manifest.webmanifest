@@ -1,0 +1,18 @@
+{
+  "name": "JM Automotive",
+  "short_name": "JM Repair",
+  "description": "Track your repair and book service at JM Automotive.",
+  "start_url": "track.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#15181c",
+  "theme_color": "#15181c",
+  "icons": [
+    {
+      "src": "assets/icons/app-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

@@ -38,6 +38,7 @@ const DataService = (() => {
     const nextOpen = Scheduler.nextOpenDates(2, { includeToday: false });
 
     return {
+      tickets: [],
       customers: [c1, c2, c3],
       vehicles: [v1, v2, v3],
       appointments: [
@@ -57,7 +58,7 @@ const DataService = (() => {
   function load() {
     try {
       const raw = localStorage.getItem(KEY);
-      if (raw) return JSON.parse(raw);
+      if (raw) { const db = JSON.parse(raw); db.tickets = db.tickets || []; return db; }
     } catch (e) { /* storage unavailable or corrupted: fall through to seed */ }
     const db = seed();
     save(db);
@@ -147,10 +148,74 @@ const DataService = (() => {
     return a;
   }
 
+  // ---- Repair status tickets ----------------------------------------------
+  // A ticket links one appointment to a random, hard-to-guess code that the
+  // customer uses to see the repair stage. The public view returns only the
+  // vehicle, services and stage: never names, phones or prices.
+  const CODE_CHARS = "ABCDEFGHJKMNPQRSTUVWXYZ23456789"; // no 0/O, 1/I/L
+  function newCode(existing) {
+    let code;
+    do {
+      const r = new Uint32Array(6);
+      crypto.getRandomValues(r);
+      code = "JM-" + Array.from(r, (n) => CODE_CHARS[n % CODE_CHARS.length]).join("");
+    } while (existing.some((t) => t.code === code));
+    return code;
+  }
+  const normCode = (c) => {
+    const s = String(c || "").toUpperCase().replace(/[^A-Z0-9]/g, "");
+    return s ? "JM-" + s.replace(/^JM/, "") : "";
+  };
+
+  async function getTickets() { return load().tickets.slice(); }
+
+  async function createTicket(appointmentId) {
+    const db = load();
+    const existing = db.tickets.find((t) => t.appointmentId === appointmentId);
+    if (existing) return existing;
+    const a = db.appointments.find((x) => x.id === appointmentId);
+    if (!a) throw new Error("Appointment not found.");
+    const first = CONFIG.repairStages[0].id;
+    const t = { code: newCode(db.tickets), appointmentId, stage: first,
+                history: [{ stage: first, at: new Date().toISOString() }], closed: false };
+    db.tickets.push(t);
+    save(db);
+    return t;
+  }
+
+  async function setTicketStage(code, stageId) {
+    const db = load();
+    const t = db.tickets.find((x) => x.code === normCode(code));
+    if (!t) throw new Error("Ticket not found.");
+    if (!CONFIG.repairStages.some((s) => s.id === stageId)) throw new Error("Unknown stage.");
+    if (t.stage !== stageId) { t.stage = stageId; t.history.push({ stage: stageId, at: new Date().toISOString() }); }
+    save(db);
+    return t;
+  }
+
+  async function closeTicket(code) {
+    const db = load();
+    const t = db.tickets.find((x) => x.code === normCode(code));
+    if (t) { t.closed = true; save(db); }
+    return t;
+  }
+
+  // Public lookup for the customer status page. Safe fields only.
+  async function getPublicStatus(code) {
+    const db = load();
+    const t = db.tickets.find((x) => x.code === normCode(code));
+    if (!t) return null;
+    const a = db.appointments.find((x) => x.id === t.appointmentId) || {};
+    const v = db.vehicles.find((x) => x.id === a.vehicleId) || {};
+    return { code: t.code, stage: t.stage, history: t.history.slice(), closed: t.closed,
+             vehicle: { year: v.year, make: v.make, model: v.model }, serviceIds: (a.serviceIds || []).slice() };
+  }
+
   async function resetDemo() {
     try { localStorage.removeItem(KEY); } catch (e) { /* ignore */ }
     return load();
   }
 
-  return { getAppointments, getCustomers, getVehicles, createBooking, updateAppointment, resetDemo };
+  return { getAppointments, getCustomers, getVehicles, createBooking, updateAppointment, resetDemo,
+           getTickets, createTicket, setTicketStage, closeTicket, getPublicStatus, normCode };
 })();

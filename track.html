@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Track my repair | JM Automotive</title>
+  <meta name="description" content="See the status of your vehicle repair at JM Automotive with the code on your ticket.">
+  <meta name="theme-color" content="#15181c">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="assets/icons/app-icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="assets/icons/app-icon.svg">
+</head>
+<body class="track-page">
+
+  <div class="demo-banner" id="demoBanner" hidden>
+    Demo version: repair status is saved only in this browser until the online database is connected.
+  </div>
+
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <a href="index.html" class="brand" data-biz="name">JM Automotive</a>
+      <nav class="main-nav" aria-label="Main">
+        <a href="index.html#schedule" class="btn btn-small">Book a service</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap track-main">
+    <h1>Track my repair</h1>
+    <p class="muted">Enter the code on your ticket, or scan the QR code on it with your phone camera.</p>
+
+    <form class="track-form" id="trackForm" novalidate>
+      <label for="trackCode">Ticket code</label>
+      <div class="track-input">
+        <input id="trackCode" name="code" placeholder="JM-7K3Q9P" autocomplete="off" autocapitalize="characters" spellcheck="false" required>
+        <button class="btn" type="submit">Check status</button>
+      </div>
+      <p class="form-error" id="trackError" role="alert" hidden></p>
+    </form>
+
+    <section class="panel track-result" id="trackResult" hidden aria-live="polite">
+      <div class="track-veh" id="trVehicle"></div>
+      <div class="track-code" id="trCode"></div>
+      <div class="track-pct"><strong id="trPct"></strong><span id="trLabel"></span></div>
+      <div class="meter meter-lg"><i id="trBar"></i></div>
+      <ol class="track-stages" id="trStages"></ol>
+      <p class="muted track-services" id="trServices"></p>
+      <p class="fine">Questions? Call us at <a data-biz-tel href="#" data-biz="phoneDisplay"></a> or message us on <a data-wa href="#" target="_blank" rel="noopener">WhatsApp</a> and mention your ticket code.</p>
+      <p class="fine"><a href="#" id="staffLink">Staff: update this car</a></p>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap footer-inner">
+      <p>© <span id="year"></span> <span data-biz="name">JM Automotive</span></p>
+      <p><a href="index.html">Home</a> · <a href="privacy.html">Privacy policy</a></p>
+    </div>
+  </footer>
+
+  <script src="js/config.js"></script>
+  <script src="js/scheduler.js"></script>
+  <script src="js/dataService.js"></script>
+  <script src="js/track.js"></script>
+</body>
+</html>

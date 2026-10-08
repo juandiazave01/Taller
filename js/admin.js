@@ -46,7 +46,7 @@
   function showTab(name) {
     $$(".tab").forEach((t) => { const on = t.dataset.tab === name; t.classList.toggle("is-on", on); t.setAttribute("aria-selected", on); });
     $$(".tab-panel").forEach((p) => (p.hidden = p.id !== "tab-" + name));
-    ({ schedule: renderSchedule, walkin: renderWalkinSlots, customers: renderCustomers, reminders: renderReminders })[name]();
+    ({ schedule: renderSchedule, walkin: renderWalkinSlots, customers: renderCustomers, reminders: renderReminders, repairs: renderRepairs })[name]();
   }
 
   // ---------- Schedule ----------
@@ -216,6 +216,102 @@
       </table></div>`;
   }
 
+  // ---------- Repair status ----------
+  const STAGES = CONFIG.repairStages;
+  const stageOf = (id) => STAGES.find((s) => s.id === id) || STAGES[0];
+  const stageText = (s) => s.label + (s.id.startsWith("work-") ? " " + s.pct + "%" : "");
+  const trackUrl = (code) => new URL("track.html?t=" + encodeURIComponent(code), location.href).href;
+  const focusCode = new URLSearchParams(location.search).get("t");
+
+  async function renderRepairs() {
+    const [tickets, appts, customers, vehicles] = await Promise.all([
+      DataService.getTickets(), DataService.getAppointments(), DataService.getCustomers(), DataService.getVehicles()]);
+    const info = (apptId) => {
+      const a = appts.find((x) => x.id === apptId) || {};
+      return { a, c: customers.find((x) => x.id === a.customerId) || {}, v: vehicles.find((x) => x.id === a.vehicleId) || {} };
+    };
+    const open = tickets.filter((t) => !t.closed);
+    const want = focusCode && DataService.normCode(focusCode);
+
+    $("#ticketList").innerHTML = open.length ? open.map((t) => {
+      const { a, c, v } = info(t.appointmentId);
+      const s = stageOf(t.stage);
+      return `
+        <article class="ticket-row${t.code === want ? " is-focus" : ""}" id="tk-${esc(t.code)}">
+          <div class="ticket-head">
+            <div><strong class="ticket-code">${esc(t.code)}</strong>
+              <div>${esc(v.year)} ${esc(v.make)} ${esc(v.model)} · ${esc(c.name)}</div>
+              <div class="muted">${(a.serviceIds || []).map(svcName).map(esc).join(", ")}</div></div>
+            <div class="ticket-pct"><strong>${s.pct}%</strong><span>${esc(stageText(s))}</span></div>
+          </div>
+          <div class="meter"><i style="width:${s.pct}%"></i></div>
+          <div class="stage-grid" role="group" aria-label="Stage for ${esc(t.code)}">
+            ${STAGES.map((x) => `<button type="button" class="stage-btn" data-code="${esc(t.code)}" data-stage="${x.id}" aria-pressed="${x.id === t.stage}">${esc(stageText(x))}</button>`).join("")}
+          </div>
+          <div class="ticket-actions">
+            <button type="button" class="btn btn-small" data-print="${esc(t.code)}">Print ticket</button>
+            <a class="btn btn-ghost btn-small" href="${esc(trackUrl(t.code))}" target="_blank" rel="noopener">Customer view ↗</a>
+            <button type="button" class="btn btn-ghost btn-small" data-close="${esc(t.code)}">Car picked up · close</button>
+          </div>
+        </article>`;
+    }).join("") : '<p class="muted">No cars in the shop with a ticket. Start one below when work begins.</p>';
+
+    const withTicket = new Set(tickets.map((t) => t.appointmentId));
+    const startable = appts.filter((a) => a.status === "scheduled" && !withTicket.has(a.id))
+      .sort((x, y) => (x.date + String(x.start).padStart(4, "0")).localeCompare(y.date + String(y.start).padStart(4, "0")));
+    $("#ticketStart").innerHTML = startable.length ? startable.map((a) => {
+      const { c, v } = info(a.id);
+      return `<div class="start-row">
+          <span><strong>${Scheduler.fmtDate(a.date)} ${Scheduler.fmtTime(a.start)}</strong> · ${esc(v.year)} ${esc(v.make)} ${esc(v.model)} · ${esc(c.name)}
+          <span class="muted">· ${a.serviceIds.map(svcName).map(esc).join(", ")}</span></span>
+          <button type="button" class="btn btn-small" data-start="${a.id}">Start ticket</button>
+        </div>`;
+    }).join("") : '<p class="muted">No scheduled appointments without a ticket. Book one or add a walk-in first.</p>';
+
+    if (want) { const el = document.getElementById("tk-" + want); if (el) el.scrollIntoView({ block: "center" }); }
+  }
+
+  function printTicket(code, t, v, a) {
+    const box = $("#printTicket");
+    box.innerHTML = `
+      <div class="pt-card">
+        <div class="pt-qr" id="ptQr"></div>
+        <div class="pt-text">
+          <div class="pt-shop">${esc(CONFIG.business.name)}</div>
+          <div class="pt-code">${esc(code)}</div>
+          <div>${esc(v.year)} ${esc(v.make)} ${esc(v.model)}</div>
+          <div>${(a.serviceIds || []).map(svcName).map(esc).join(", ")}</div>
+          <div class="pt-help">Scan to see your repair status, or enter the code at our website under "Track my repair".</div>
+        </div>
+      </div>`;
+    try {
+      const q = qrcode(0, "M");            // js/vendor/qrcode-generator.js (MIT)
+      q.addData(trackUrl(code)); q.make();
+      $("#ptQr").innerHTML = q.createSvgTag({ cellSize: 6, margin: 2, scalable: true });
+    } catch (_) { $("#ptQr").textContent = trackUrl(code); }
+    box.hidden = false;
+    setTimeout(() => { window.print(); }, 300);
+  }
+  window.addEventListener("afterprint", () => { $("#printTicket").hidden = true; });
+
+  async function onRepairsClick(e) {
+    const st = e.target.closest("[data-stage]");
+    const start = e.target.closest("[data-start]");
+    const pr = e.target.closest("[data-print]");
+    const cl = e.target.closest("[data-close]");
+    if (st) { await DataService.setTicketStage(st.dataset.code, st.dataset.stage); renderRepairs(); }
+    if (start) { await DataService.createTicket(start.dataset.start); renderRepairs(); }
+    if (cl && confirm("Close ticket " + cl.dataset.close + "? The customer page will show the car as picked up.")) {
+      await DataService.closeTicket(cl.dataset.close); renderRepairs();
+    }
+    if (pr) {
+      const [tickets, appts, vehicles] = await Promise.all([DataService.getTickets(), DataService.getAppointments(), DataService.getVehicles()]);
+      const t = tickets.find((x) => x.code === pr.dataset.print);
+      const a = appts.find((x) => x.id === t.appointmentId) || {};
+      printTicket(t.code, t, vehicles.find((x) => x.id === a.vehicleId) || {}, a);
+    }
+  }
+
   // ---------- Init ----------
   let started = false;
   function initApp() {
@@ -223,6 +319,7 @@
     $("#schedDate").value = today();
     $("#schedDate").addEventListener("change", renderSchedule);
     $("#apptList").addEventListener("click", onScheduleClick);
+    $("#tab-repairs").addEventListener("click", onRepairsClick);
     $$(".tab").forEach((t) => t.addEventListener("click", () => showTab(t.dataset.tab)));
 
     const wf = $("#walkinForm");
@@ -245,7 +342,7 @@
       await DataService.resetDemo(); showTab("schedule");
     });
 
-    renderSchedule();
+    if (focusCode) showTab("repairs"); else renderSchedule();
   }
 
   let signedIn = false;

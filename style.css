@@ -314,6 +314,8 @@ address { font-style: normal; margin-bottom: 1rem; }
    Staff panel
    ========================================================================= */
 .admin-main { padding: 2rem 1.25rem 4rem; }
+/* Elements with the hidden attribute stay hidden even if a class sets display */
+[hidden] { display: none !important; }
 .login { max-width: 420px; margin: 3rem auto; display: grid; gap: 1rem; }
 .login h1 { font-size: 2.2rem; margin: 0; }
 .login .form-error { margin: 0; }
@@ -359,4 +361,69 @@ address { font-style: normal; margin-bottom: 1rem; }
   .appt { grid-template-columns: 1fr; }
   .appt-tags { flex-direction: row; flex-wrap: wrap; }
   .appt-actions { flex-direction: row; }
+}
+
+
+/* ---------- Repair status (staff tab + customer page) ---------- */
+.meter { height: 10px; border-radius: 5px; background: var(--graphite-2); overflow: hidden; }
+.meter i { display: block; height: 100%; background: var(--yellow); }
+.meter-lg { height: 14px; border-radius: 7px; }
+@media (prefers-reduced-motion: no-preference) { .meter i { transition: width .4s ease; } }
+
+.ticket-row { border: 1px solid var(--line); border-radius: var(--radius); padding: 1rem; display: grid; gap: .8rem; margin-bottom: 1rem; background: var(--graphite); }
+.ticket-row.is-focus { border-color: var(--yellow); box-shadow: 0 0 0 2px rgba(245,184,0,.25); }
+.ticket-head { display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+.ticket-head > div { min-width: 0; }
+.ticket-code { font-family: var(--font-head); font-size: 1.5rem; letter-spacing: .05em; }
+.ticket-pct { text-align: right; display: grid; }
+.ticket-pct strong { font-family: var(--font-head); font-size: 2rem; color: var(--yellow); line-height: 1; }
+.ticket-pct span { color: var(--steel); font-size: .9rem; }
+.stage-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: .5rem; }
+.stage-btn { font: 600 .92rem var(--font-body); text-align: left; padding: .6rem .7rem; border-radius: var(--radius); border: 1px solid var(--line); background: transparent; color: var(--chalk); cursor: pointer; }
+.stage-btn:hover { border-color: var(--steel); }
+.stage-btn[aria-pressed="true"] { background: var(--yellow); color: var(--yellow-ink); border-color: var(--yellow); }
+.ticket-actions { display: flex; flex-wrap: wrap; gap: .5rem; }
+.start-row { display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap; padding: .7rem 0; border-bottom: 1px solid var(--line); }
+.start-row > span { min-width: 0; }
+
+.track-main { padding-block: 2.5rem 4rem; max-width: 720px; }
+.track-form { display: grid; gap: .4rem; margin: 1.5rem 0; }
+.track-form label { font-weight: 600; }
+.track-input { display: flex; gap: .6rem; flex-wrap: wrap; }
+.track-input input { flex: 1 1 200px; min-width: 0; font: 600 1.2rem var(--font-body); letter-spacing: .08em; text-transform: uppercase; padding: .7rem .8rem; border-radius: var(--radius); border: 1px solid var(--line); background: var(--graphite-2); color: var(--chalk); }
+.track-result { display: grid; gap: .5rem; }
+.track-veh { font-family: var(--font-head); font-size: 1.8rem; font-weight: 600; }
+.track-code { color: var(--steel); letter-spacing: .06em; font-weight: 600; }
+.track-pct { display: flex; align-items: baseline; gap: .6rem; margin-top: .6rem; flex-wrap: wrap; }
+.track-pct strong { font-family: var(--font-head); font-size: 3rem; color: var(--yellow); line-height: 1; }
+.track-stages { list-style: none; margin: 1rem 0 0; padding: 0; display: grid; gap: .1rem; }
+.track-stages li { display: grid; grid-template-columns: 22px 1fr auto; gap: .7rem; align-items: center; padding: .45rem 0; color: var(--steel); }
+.track-stages .dot { width: 14px; height: 14px; border-radius: 50%; border: 2px solid var(--line); justify-self: center; }
+.track-stages .is-done { color: var(--chalk); }
+.track-stages .is-done .dot { background: var(--whatsapp); border-color: var(--whatsapp); }
+.track-stages .is-now { color: var(--chalk); font-weight: 600; }
+.track-stages .is-now .dot { background: var(--yellow); border-color: var(--yellow); box-shadow: 0 0 0 4px rgba(245,184,0,.2); }
+.track-stages time { font-size: .85rem; color: var(--steel); font-weight: 400; font-variant-numeric: tabular-nums; }
+.track-services { margin-top: .5rem; }
+
+/* Header on phones: keep Track, Book and Staff visible without crowding */
+@media (max-width: 520px) {
+  .main-nav .nav-track { display: none; }  /* the hero shows a large Track button on phones */
+  .main-nav { gap: .4rem; }
+  .main-nav .btn-small { font-size: .9rem; padding: .35rem .6rem; }
+  .brand { font-size: 1.15rem; }
+}
+
+/* ---------- Printable repair ticket ---------- */
+.print-ticket { display: none; }
+@media print {
+  body.admin > *:not(.print-ticket) { display: none !important; }
+  body.admin { background: #fff; color: #000; }
+  .print-ticket:not([hidden]) { display: block !important; }
+  .pt-card { display: flex; gap: 1.2rem; align-items: center; border: 3px solid #000; border-radius: 6px; padding: 1rem; max-width: 6in; font-family: var(--font-body); color: #000; }
+  .pt-qr { width: 1.8in; height: 1.8in; flex: none; }
+  .pt-qr svg { width: 100%; height: 100%; }
+  .pt-shop { font-weight: 700; }
+  .pt-code { font-family: var(--font-head); font-size: 2rem; font-weight: 700; letter-spacing: .06em; }
+  .pt-help { margin-top: .5rem; font-size: .85rem; }
 }

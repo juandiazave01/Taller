@@ -87,6 +87,17 @@ const CONFIG = {
       desc: "Safety and emissions inspection.", comingSoon: true }, // Enable when NCDMV license is granted
   ],
 
+  // Repair status stages shown to customers (in order). pct = progress bar.
+  repairStages: [
+    { id: "started",    label: "Started",                          pct: 10  },
+    { id: "parts-wait", label: "Waiting for parts from suppliers", pct: 20  },
+    { id: "work-30",    label: "Parts here – working on the car",  pct: 30  },
+    { id: "work-50",    label: "Working on the car",               pct: 50  },
+    { id: "work-75",    label: "Working on the car",               pct: 75  },
+    { id: "work-90",    label: "Working on the car",               pct: 90  },
+    { id: "ready",      label: "Ready for pickup",                 pct: 100 },
+  ],
+
   // Maintenance reminder rules (sample values — adjust per service later)
   reminders: {
     intervalDays: 180,     // remind 6 months after last service...
