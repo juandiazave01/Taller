@@ -104,8 +104,16 @@ const CONFIG = {
   ],
 
   admin: {
-    // DEMO ONLY. This password is visible in the page source and gives NO
-    // real protection. Replace with real authentication in Phase 2.
-    demoPassword: "jm-demo",
+    // Staff password, stored as a SHA-256 hash (never the plain password).
+    // This is still a browser-side check and NOT real protection: it only
+    // keeps casual visitors out. Phase 2 replaces it with a real login.
+    // To change the password, put the SHA-256 hash of the new one here.
+    passwordSha256: "5afc8b33f996e86008ac1ad8f81b1f19c74a58e5e0a6c6c597155dfa457b8860",
+
+    // Quick links shown inside the staff panel only
+    tools: [
+      { label: "Open Labor Project", url: "https://openlaborproject.com/",
+        desc: "Labor times, specs and recalls to prepare a customer quote." },
+    ],
   },
 };

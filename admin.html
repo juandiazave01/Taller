@@ -13,7 +13,7 @@
 <body class="admin">
 
   <div class="demo-banner">
-    Demo staff panel. The password is not secure and data lives only in this browser. Real login and database come in Phase 2.
+    Demo staff panel. The password check is basic and data lives only in this browser. Real login and database come in Phase 2.
   </div>
 
   <header class="site-header">
@@ -35,10 +35,10 @@
       </label>
       <p class="form-error" id="loginError" role="alert" hidden>Wrong password. Try again.</p>
       <button class="btn btn-wide" type="submit">Sign in</button>
-      <p class="fine">Demo password: see <code>CONFIG.admin.demoPassword</code> in js/config.js.</p>
     </form>
 
     <div id="app" hidden>
+      <div class="staff-tools" id="staffTools" aria-label="Quote tools"></div>
       <div class="tabs" role="tablist">
         <button role="tab" class="tab is-on" data-tab="schedule" aria-selected="true">Schedule</button>
         <button role="tab" class="tab" data-tab="walkin" aria-selected="false">Walk-in</button>

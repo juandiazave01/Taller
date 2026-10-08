@@ -4,7 +4,7 @@ Single-page website for an independent auto repair shop in Oxford, NC.
 "JM Automotive" is a placeholder name.
 
 Customers can:
-- See services with estimated price ranges
+- See the list of services (no prices on the list; estimates come from the online estimate tool)
 - Get an online estimate for their vehicle
 - Book a service from real-time availability (only open times are shown)
 - Contact the shop on WhatsApp in Spanish
@@ -14,6 +14,7 @@ Staff can (admin.html):
 - Register walk-ins (they block the public calendar immediately)
 - Browse customers, vehicles and service history
 - See which vehicles are due for maintenance reminders
+- Open quote tools (Open Labor Project) from the staff panel
 
 ## Phase 1 status: demo only
 
@@ -21,8 +22,8 @@ Everything runs in the browser. There is no server or database yet.
 
 - Data is stored in the browser's localStorage, so it exists only on the
   device and browser where it was entered. **Do not enter real customer data.**
-- The staff password is in `js/config.js` and is visible to anyone. It is a
-  placeholder, not security.
+- The staff password is stored as a SHA-256 hash in `js/config.js`. The check
+  runs in the browser, so it keeps casual visitors out but is not real security.
 - Prices, contact details, reviews and images are samples (see the
   placeholder list below).
 

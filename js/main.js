@@ -11,11 +11,11 @@
   const money = (n) => "$" + Math.round(n).toLocaleString("en-US");
   const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 
-  function priceLabel(s) {
+  // Service list shows no prices: only a "Free" or "Coming soon" tag where it applies
+  function boardTag(s) {
     if (s.comingSoon) return "Coming soon";
     if (s.priceMin === 0 && s.priceMax === 0) return "Free";
-    if (s.priceMax == null) return "From " + money(s.priceMin);
-    return money(s.priceMin) + " – " + money(s.priceMax);
+    return "";
   }
   const duration = (m) => (m < 60 ? m + " min" : (m / 60) + (m === 60 ? " hr" : " hrs"));
 
@@ -54,7 +54,7 @@
       <div class="board-row${s.comingSoon ? " is-soon" : ""}">
         <div class="board-name"><strong>${esc(s.name)}</strong><span>${esc(s.desc)}</span></div>
         <div class="board-time">${s.comingSoon ? "" : duration(s.minutes)}</div>
-        <div class="board-price">${priceLabel(s)}</div>
+        <div class="board-tag">${boardTag(s)}</div>
         <div class="board-act">${s.comingSoon ? "" : `<a href="#schedule" class="link-book" data-preselect="${s.id}">Book</a>`}</div>
       </div>`;
   }
@@ -86,7 +86,7 @@
         <input type="checkbox" name="${name}" value="${s.id}">
         <span class="pick-box">
           <span class="pick-name">${esc(s.name)}</span>
-          <span class="pick-meta">${priceLabel(s)}</span>
+          ${boardTag(s) ? `<span class="pick-meta">${boardTag(s)}</span>` : ""}
         </span>
       </label>`).join(""));
   }

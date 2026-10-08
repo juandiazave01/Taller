@@ -17,13 +17,25 @@
   $$("[data-biz]").forEach((el) => (el.textContent = CONFIG.business[el.dataset.biz] || el.textContent));
 
   // ---------- Login (demo) ----------
+  function renderTools() {
+    $("#staffTools").innerHTML = (CONFIG.admin.tools || []).map((t) => `
+      <a class="btn btn-small" href="${esc(t.url)}" target="_blank" rel="noopener noreferrer" title="${esc(t.desc)}">${esc(t.label)} ↗</a>
+      <span class="muted">${esc(t.desc)}</span>`).join("");
+  }
   function showApp() {
     $("#loginForm").hidden = true; $("#app").hidden = false; $("#logout").hidden = false;
+    renderTools();
     initApp();
   }
-  $("#loginForm").addEventListener("submit", (e) => {
+  async function sha256(text) {
+    const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(text));
+    return Array.from(new Uint8Array(buf)).map((b) => b.toString(16).padStart(2, "0")).join("");
+  }
+  $("#loginForm").addEventListener("submit", async (e) => {
     e.preventDefault();
-    if (e.target.pw.value === CONFIG.admin.demoPassword) {
+    let ok = false;
+    try { ok = (await sha256(e.target.pw.value)) === CONFIG.admin.passwordSha256; } catch (_) {}
+    if (ok) {
       try { sessionStorage.setItem(SESSION, "1"); } catch (_) {}
       showApp();
     } else { $("#loginError").hidden = false; }
