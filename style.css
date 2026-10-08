@@ -192,7 +192,8 @@ legend { font-weight: 600; margin-bottom: .6rem; }
 .service-picks { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: .6rem; }
 .service-picks legend { grid-column: 1 / -1; }
 .pick { display: block; cursor: pointer; }
-.pick input { position: absolute; opacity: 0; pointer-events: none; }
+.pick { position: relative; }
+.pick input { position: absolute; top: 0; left: 0; width: 1px; height: 1px; min-height: 0; padding: 0; opacity: 0; pointer-events: none; }  /* hidden checkbox must not widen the page */
 .pick-box {
   display: grid; gap: .1rem; height: 100%;
   border: 1px solid var(--line); border-radius: var(--radius);
